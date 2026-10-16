@@ -1,0 +1,151 @@
+{
+  "schema": "lernkarten-deck/v1",
+  "deck": {
+    "id": "beispiel-bauphysik-grundlagen",
+    "title": "Beispiel – Bauphysik Grundlagen",
+    "subject": "Bauphysik",
+    "created": "2026-10-13",
+    "source": "Beispielkarten mit allgemeinem Grundwissen – keine Unterrichtsinhalte"
+  },
+  "cards": [
+    {
+      "id": "b001",
+      "type": "basic",
+      "front": "Was gibt die Wärmeleitfähigkeit $\\lambda$ eines Baustoffs an?",
+      "back": "Wie gut der Stoff Wärme leitet. Je **kleiner** $\\lambda$, desto besser dämmt er.",
+      "tags": ["beispiel", "waermeschutz"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b002",
+      "type": "mc",
+      "front": "Welche Einheit hat die Wärmeleitfähigkeit $\\lambda$?",
+      "choices": ["W/(m·K)", "W/(m²·K)", "m²·K/W", "J/kg"],
+      "answer": 0,
+      "explain": "$\\lambda$ in W/(m·K), der U-Wert in W/(m²·K), der Wärmedurchlasswiderstand $R$ in m²·K/W.",
+      "tags": ["beispiel", "waermeschutz", "einheiten"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b003",
+      "type": "basic",
+      "front": "Wie berechnet sich der Wärmedurchlasswiderstand $R$ einer homogenen Schicht?",
+      "back": "$$R = \\frac{d}{\\lambda}$$\n\nSchichtdicke $d$ in m, Wärmeleitfähigkeit $\\lambda$ in W/(m·K), Ergebnis in m²·K/W.",
+      "tags": ["beispiel", "waermeschutz", "formel"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b004",
+      "type": "cloze",
+      "front": "Der U-Wert ist der Kehrwert des {{c1::Wärmedurchgangswiderstands $R_T$}}.",
+      "explain": "$U = \\frac{1}{R_T}$",
+      "tags": ["beispiel", "waermeschutz"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b005",
+      "type": "tf",
+      "front": "Je kleiner der U-Wert eines Bauteils, desto besser ist sein Wärmeschutz.",
+      "answer": true,
+      "explain": "Ein kleiner U-Wert bedeutet: Es fließt wenig Wärme durch das Bauteil.",
+      "tags": ["beispiel", "waermeschutz"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b006",
+      "type": "mc",
+      "front": "Welche Einheit hat der Wärmedurchgangskoeffizient (U-Wert)?",
+      "choices": ["W/(m·K)", "m²·K/W", "W/(m²·K)", "W/m²"],
+      "answer": 2,
+      "tags": ["beispiel", "waermeschutz", "einheiten"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b007",
+      "type": "tf",
+      "front": "Die Wärmeleitfähigkeit $\\lambda$ wird in W/(m²·K) angegeben.",
+      "answer": false,
+      "explain": "W/(m²·K) ist die Einheit des U-Werts. $\\lambda$ hat die Einheit W/(m·K).",
+      "tags": ["beispiel", "waermeschutz", "einheiten"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b008",
+      "type": "typed",
+      "front": "Wie heißt der Kehrwert des Wärmedurchgangswiderstands $R_T$ (Kurzbezeichnung)?",
+      "back": "U-Wert",
+      "tags": ["beispiel", "waermeschutz"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b009",
+      "type": "basic",
+      "front": "Was sagt die Wasserdampf-Diffusionswiderstandszahl $\\mu$ aus?",
+      "back": "Um welchen Faktor der Diffusionswiderstand eines Stoffs größer ist als der einer gleich dicken, ruhenden Luftschicht. Für Luft gilt $\\mu = 1$.",
+      "tags": ["beispiel", "feuchteschutz"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b010",
+      "type": "cloze",
+      "front": "Die wasserdampfdiffusionsäquivalente Luftschichtdicke berechnet sich zu $s_d$ = {{c1::$\\mu \\cdot d$}} (in m).",
+      "tags": ["beispiel", "feuchteschutz", "formel"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b011",
+      "type": "basic",
+      "front": "Was ist die Taupunkttemperatur?",
+      "back": "Die Temperatur, bei der die Luft mit Wasserdampf gesättigt ist (relative Luftfeuchte 100 %). Kühlt die Luft weiter ab, fällt Tauwasser aus.",
+      "tags": ["beispiel", "feuchteschutz"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b012",
+      "type": "tf",
+      "front": "Warme Luft kann mehr Wasserdampf aufnehmen als kalte Luft.",
+      "answer": true,
+      "tags": ["beispiel", "feuchteschutz"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b013",
+      "type": "typed",
+      "front": "In welcher Einheit wird der Schalldruckpegel angegeben (Abkürzung)?",
+      "back": "dB",
+      "explain": "dB = Dezibel",
+      "tags": ["beispiel", "schallschutz", "einheiten"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b014",
+      "type": "mc",
+      "front": "Welche Größe beschreibt die Luftschalldämmung eines Bauteils im eingebauten Zustand, also einschließlich der Flankenübertragung?",
+      "choices": [
+        "Bewerteter Norm-Trittschallpegel $L'_{n,w}$",
+        "Bewertetes Bau-Schalldämm-Maß $R'_w$",
+        "Wärmedurchgangskoeffizient $U$",
+        "Nachhallzeit $T$"
+      ],
+      "answer": 1,
+      "tags": ["beispiel", "schallschutz"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b015",
+      "type": "cloze",
+      "front": "Beim Trittschall gilt: Je {{c1::kleiner}} der bewertete Norm-Trittschallpegel $L'_{n,w}$, desto {{c2::besser}} ist der Trittschallschutz.",
+      "explain": "Beim Luftschall ist es umgekehrt: Je größer $R'_w$, desto besser.",
+      "tags": ["beispiel", "schallschutz"],
+      "source": "Beispiel"
+    },
+    {
+      "id": "b016",
+      "type": "basic",
+      "front": "Was gibt die relative Luftfeuchte $\\varphi$ an?",
+      "back": "Das Verhältnis des vorhandenen Wasserdampfgehalts der Luft zum maximal möglichen (Sättigungs-)Gehalt bei gleicher Temperatur, angegeben in %.",
+      "tags": ["beispiel", "feuchteschutz"],
+      "source": "Beispiel"
+    }
+  ]
+}

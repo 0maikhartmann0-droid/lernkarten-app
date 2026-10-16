@@ -1,0 +1,6 @@
+# Einheitliche LF-Zeilenenden auf allen Systemen (Prettier prüft auf LF)
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.pdf binary

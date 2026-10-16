@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Lernkarten-App auf dem Android-Handy – Anleitung</title>
+<meta name="author" content="Maik Hartmann">
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    --green: #1f4d3a;
+    --green-2: #2f6b52;
+    --green-bg: #e9f0eb;
+    --line: #cbd5ce;
+    --head-bg: #eef3ef;
+    --accent: #b0601f;
+    --accent-bg: #f8ede2;
+    --text: #1d1f1e;
+    --muted: #5f6762;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10pt;
+    line-height: 1.42;
+    color: var(--text);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm;
+    height: 297mm;
+    padding: 11mm 17mm 10mm;
+    display: flex;
+    flex-direction: column;
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+
+  /* Kopf- und Fußzeile */
+  .run { flex: none; margin-bottom: 7mm; }
+  .run-top {
+    display: flex; justify-content: space-between;
+    padding-bottom: 1.6mm; border-bottom: 1.2pt solid var(--green);
+    color: var(--green); font-size: 8.5pt; font-weight: 600;
+  }
+  .part { margin-top: 1.4mm; color: var(--muted); font-size: 8pt; }
+  .content { flex: 1; overflow: hidden; }
+  .foot {
+    flex: none; display: flex; justify-content: space-between; align-items: flex-end;
+    margin-top: 4mm; padding-top: 1.6mm; border-top: 0.6pt solid var(--line);
+    color: var(--muted); font-size: 7.5pt;
+  }
+  .foot .pageno { color: var(--text); font-weight: 600; white-space: nowrap; }
+
+  /* Überschriften */
+  h1 { margin: 0 0 1.5mm; color: var(--green); font-size: 21pt; line-height: 1.15; font-weight: 700; }
+  .subtitle { margin: 0 0 6mm; color: var(--muted); font-size: 11pt; }
+  h2 {
+    margin: 5mm 0 2.6mm; padding-bottom: 1.3mm; border-bottom: 1pt solid var(--green);
+    color: var(--green); font-size: 14pt; font-weight: 700; break-after: avoid;
+  }
+  .content > h2:first-child { margin-top: 0; }
+  h3 { margin: 4mm 0 1.6mm; color: var(--text); font-size: 10.8pt; font-weight: 700; break-after: avoid; }
+  h2 .no { display: inline-block; width: 10mm; }
+  p { margin: 0 0 2mm; }
+  ul, ol { margin: 0 0 2mm; padding-left: 5.5mm; }
+  li { margin: 0 0 0.9mm; }
+  li::marker { color: var(--green-2); }
+  strong { font-weight: 700; }
+  a { color: inherit; text-decoration: none; }
+  a.ref { color: var(--green-2); border-bottom: 0.5pt solid var(--line); }
+  code, .mono { font-family: Consolas, monospace; font-size: 9pt; }
+  code { padding: 0 1mm; background: #f1f3f2; border-radius: 1mm; }
+
+  /* Inhaltsverzeichnis */
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; margin-bottom: 2mm; }
+  .toc { width: 100%; border-collapse: collapse; font-size: 9.6pt; }
+  .toc td { padding: 1.5mm 1mm; border-bottom: 0.6pt solid var(--line); }
+  .toc tr:first-child td { border-top: 0.6pt solid var(--line); }
+  .toc td.n { width: 9mm; color: var(--green); font-weight: 700; }
+  .toc td.p { width: 10mm; text-align: right; color: var(--muted); }
+
+  /* Boxen: Definition, Merke, Achtung */
+  .box { margin: 2.5mm 0; padding: 2.4mm 4mm 2.6mm; border-left: 1.6mm solid var(--green); background: var(--green-bg); break-inside: avoid; }
+  .box .label { display: block; margin-bottom: 0.8mm; color: var(--green); font-size: 8pt; font-weight: 700; letter-spacing: 0.06em; }
+  .box.warn { border-left-color: var(--accent); background: var(--accent-bg); }
+  .box.warn .label { color: var(--accent); }
+  .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+  .erg { color: var(--muted); font-style: italic; }
+
+  /* Tabellen */
+  table.t { width: 100%; border-collapse: collapse; margin: 2mm 0 2.5mm; font-size: 9pt; break-inside: avoid; }
+  table.t th, table.t td { padding: 1.5mm 2mm; border: 0.6pt solid var(--line); text-align: left; vertical-align: top; }
+  table.t th { background: var(--head-bg); color: var(--text); font-weight: 700; }
+  table.t td:first-child { font-weight: 600; }
+  table.t td.plain { font-weight: 400; }
+
+  /* Code */
+  pre.code {
+    margin: 2mm 0 1.4mm; padding: 2.4mm 3mm; border: 0.6pt solid var(--line); background: #f6f7f6;
+    font-family: Consolas, monospace; font-size: 8.3pt; line-height: 1.32; white-space: pre; break-inside: avoid;
+  }
+  .cmd { margin: 1.4mm 0 2mm; padding: 1.6mm 3mm; border: 0.6pt solid var(--line); background: #f6f7f6; font-family: Consolas, monospace; font-size: 9pt; }
+
+  /* Abbildungen */
+  figure { margin: 3mm 0 3mm; break-inside: avoid; }
+  figure svg { display: block; width: 100%; height: auto; }
+  figcaption { margin-top: 1.4mm; color: var(--muted); font-size: 8pt; }
+
+  .src { margin: 1.6mm 0 0; color: var(--muted); font-size: 7.8pt; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+  .steps li { margin-bottom: 1.2mm; }
+  .lit { margin: 0; padding-left: 5mm; text-indent: -5mm; font-size: 9pt; }
+  .lit li { list-style: none; margin-bottom: 1.4mm; }
+</style>
+</head>
+<body>
+
+<!-- ================= Seite 1 ================= -->
+<section class="page" data-part="Teil 1 · Überblick">
+  <header class="run">
+    <div class="run-top"><span>Lernkarten-App · Anleitung</span><span>Holzbautechniker · HTS 2</span></div>
+    <div class="part"></div>
+  </header>
+  <div class="content">
+    <h1>Lernkarten-App auf dem Android-Handy</h1>
+    <p class="subtitle">Anleitung · Installation als Web-App, Offline-Lernen, Decks und Backup · Stand 16.10.2026</p>
+
+    <div class="toc-grid">
+    <table class="toc">
+      <tr><td class="n">1</td><td><a href="#s1">Überblick</a></td><td class="p" data-page-of="s1"></td></tr>
+      <tr><td class="n">2</td><td><a href="#s2">App bereitstellen (einmalig, am Laptop)</a></td><td class="p" data-page-of="s2"></td></tr>
+      <tr><td class="n">3</td><td><a href="#s3">Auf dem Handy installieren</a></td><td class="p" data-page-of="s3"></td></tr>
+      <tr><td class="n">4</td><td><a href="#s4">Offline testen</a></td><td class="p" data-page-of="s4"></td></tr>
+      <tr><td class="n">5</td><td><a href="#s5">Decks aufs Handy bringen</a></td><td class="p" data-page-of="s5"></td></tr>
+      <tr><td class="n">6</td><td><a href="#s6">Lernen im Zug</a></td><td class="p" data-page-of="s6"></td></tr>
+    </table>
+    <table class="toc">
+      <tr><td class="n">7</td><td><a href="#s7">Laptop und Handy</a></td><td class="p" data-page-of="s7"></td></tr>
+      <tr><td class="n">8</td><td><a href="#s8">Updates</a></td><td class="p" data-page-of="s8"></td></tr>
+      <tr><td class="n">9</td><td><a href="#s9">Probleme und Lösungen</a></td><td class="p" data-page-of="s9"></td></tr>
+      <tr><td class="n">10</td><td><a href="#s10">iPhone und APK</a></td><td class="p" data-page-of="s10"></td></tr>
+      <tr><td class="n">11</td><td><a href="#s11">Das Wichtigste in Kürze</a></td><td class="p" data-page-of="s11"></td></tr>
+      <tr><td class="n">12</td><td><a href="#s12">Quellenverzeichnis</a></td><td class="p" data-page-of="s12"></td></tr>
+    </table>
+    </div>
+
+    <h2 id="s1"><span class="no">1</span>Überblick</h2>
+    <div class="box">
+      <span class="label">DEFINITION</span>
+      <p><strong>PWA</strong> (Progressive Web App) = Web-App, die sich aus dem Browser wie eine App installieren lässt: eigenes Symbol, eigenes Fenster ohne Browserleiste und nach einmaligem Laden <strong>komplett offline</strong> nutzbar.</p>
+    </div>
+    <ul>
+      <li>Kein Play Store, <strong>keine APK</strong>: installiert wird direkt aus <strong>Chrome</strong>.</li>
+      <li>Decks, Lernstände und Backups bleiben <strong>nur auf dem Gerät</strong>. Es gibt kein Konto und keinen Server, der Daten empfängt.</li>
+      <li>Einmal mit Internet öffnen, danach läuft alles im Flugmodus.</li>
+    </ul>
+
+    <figure>
+      <svg viewBox="0 0 700 172" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif" role="img" aria-label="Ablauf in vier Schritten">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="#2f6b52"/>
+          </marker>
+        </defs>
+        <g fill="#e9f0eb" stroke="#1f4d3a" stroke-width="1.4">
+          <rect x="2" y="30" width="148" height="78" rx="5"/>
+          <rect x="186" y="30" width="148" height="78" rx="5"/>
+          <rect x="370" y="30" width="148" height="78" rx="5"/>
+          <rect x="552" y="30" width="146" height="78" rx="5"/>
+        </g>
+        <g fill="#1f4d3a" font-size="15" font-weight="700" text-anchor="middle">
+          <text x="76" y="56">1  Bauen</text>
+          <text x="260" y="56">2  Bereitstellen</text>
+          <text x="444" y="56">3  Installieren</text>
+          <text x="625" y="56">4  Offline lernen</text>
+        </g>
+        <g fill="#1d1f1e" font-size="12.5" text-anchor="middle">
+          <text x="76" y="78">Laptop</text>
+          <text x="76" y="96" font-family="Consolas, monospace" font-size="12">npm run build</text>
+          <text x="260" y="78">Netlify oder</text>
+          <text x="260" y="96">GitHub Pages</text>
+          <text x="444" y="78">Handy, Chrome</text>
+          <text x="444" y="96">⋮ → App installieren</text>
+          <text x="625" y="78">Symbol auf dem</text>
+          <text x="625" y="96">Startbildschirm</text>
+        </g>
+        <g stroke="#2f6b52" stroke-width="1.6" fill="none" marker-end="url(#ar)">
+          <line x1="152" y1="69" x2="183" y2="69"/>
+          <line x1="336" y1="69" x2="367" y2="69"/>
+          <line x1="520" y1="69" x2="549" y2="69"/>
+        </g>
+        <g fill="#5f6762" font-size="11.5" text-anchor="middle">
+          <text x="168" y="22">dist/</text>
+          <text x="352" y="22">https-Adresse</text>
+          <text x="535" y="22">einmal online</text>
+        </g>
+        <g stroke="#b0601f" stroke-width="2" fill="none">
+          <path d="M8 128 V136 H328 V128"/>
+          <path d="M376 128 V136 H692 V128"/>
+        </g>
+        <g fill="#b0601f" font-size="13" text-anchor="middle">
+          <text x="168" y="156">einmalig am Laptop</text>
+          <text x="534" y="156">auf dem Handy</text>
+        </g>
+      </svg>
+      <figcaption>Ablauf von der Bereitstellung bis zum Offline-Lernen (schematisch) | Eigene Darstellung nach docs/ANDROID.md</figcaption>
+    </figure>
+
+    <div class="box">
+      <span class="label">MERKE</span>
+      <p>Vier Schritte, die ersten beiden nur einmal: <strong>bereitstellen</strong> (Abschnitt <a class="ref" href="#s2">2</a>) → <strong>installieren</strong> (<a class="ref" href="#s3">3</a>) → <strong>offline testen</strong> (<a class="ref" href="#s4">4</a>) → <strong>Decks importieren</strong> (<a class="ref" href="#s5">5</a>).</p>
+    </div>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md (Einleitung) · README.md („So lerne ich offline im Zug“) · Skizze: eigene Darstellung</p>
+  </div>
+  <footer class="foot"><span>Quellen: Lernkarten-App – docs/ANDROID.md · README.md · docs/ENTSCHEIDUNGEN.md</span><span class="pageno"></span></footer>
+</section>
+
+<!-- ================= Seite 2 ================= -->
+<section class="page" data-part="Teil 2 · App bereitstellen">
+  <header class="run">
+    <div class="run-top"><span>Lernkarten-App · Anleitung</span><span>Holzbautechniker · HTS 2</span></div>
+    <div class="part"></div>
+  </header>
+  <div class="content">
+    <h2 id="s2"><span class="no">2</span>App bereitstellen (einmalig, am Laptop)</h2>
+    <div class="box warn">
+      <span class="label">ACHTUNG</span>
+      <p>Chrome speichert eine Web-App nur dann offline, wenn sie über <strong>https</strong> geladen wird. Eine Adresse aus dem WLAN wie <code>http://192.168.x.x:4173</code> reicht dafür <strong>nicht</strong>.</p>
+    </div>
+
+    <table class="t">
+      <tr><th style="width:24%">Kriterium</th><th style="width:38%">Variante A: Netlify</th><th>Variante B: GitHub Pages</th></tr>
+      <tr><td>Voraussetzung</td><td class="plain">keine; kostenloses Netlify-Konto empfohlen</td><td class="plain">GitHub-Konto, Projekt als Repository auf GitHub</td></tr>
+      <tr><td>Veröffentlichen</td><td class="plain">Ordner <code>dist</code> auf die Netlify-Drop-Seite ziehen</td><td class="plain">Workflow-Datei einmal anlegen, danach automatisch</td></tr>
+      <tr><td>Adresse</td><td class="plain"><span class="mono">https://name.netlify.app</span></td><td class="plain"><span class="mono">https://benutzer.github.io/repository/</span></td></tr>
+      <tr><td>Neue Version</td><td class="plain"><code>npm run build</code>, neuen <code>dist</code>-Ordner unter <strong>Deploys</strong> hineinziehen</td><td class="plain">mit jedem Push automatisch</td></tr>
+      <tr><td>Geeignet für</td><td class="plain">schnellen Start in wenigen Minuten</td><td class="plain">dauerhaften Betrieb mit Versionsverwaltung</td></tr>
+    </table>
+
+    <h3>Variante A: Netlify (am schnellsten)</h3>
+    <ol class="steps">
+      <li>Im Projektordner <code>lernkarten-app</code> den Build erzeugen:
+        <div class="cmd">npm run build</div></li>
+      <li>Im Browser <strong>app.netlify.com/drop</strong> öffnen.</li>
+      <li>Den Ordner <code>dist</code> aus dem Projektordner auf die Seite ziehen.</li>
+      <li>Netlify zeigt eine Adresse wie <span class="mono">https://irgendwas-123.netlify.app</span> – das ist die App.</li>
+    </ol>
+    <p>Ohne Konto ist eine Drop-Seite nur <strong>vorübergehend</strong> online und wird gelöscht, wenn man sie nicht mit einem kostenlosen Konto beansprucht. Mit Konto bleibt sie bestehen; unter <strong>Site configuration → Change site name</strong> lässt sich ein lesbarer Name vergeben, z. B. <span class="mono">lernkarten-maik.netlify.app</span>. <span class="erg">Ergänzung: Netlify-Blog „Thirteen years of Netlify Drop“.</span></p>
+
+    <h3>Variante B: GitHub Pages</h3>
+    <ol class="steps">
+      <li>Projekt als Repository auf GitHub anlegen und hochladen.</li>
+      <li>Im Repository <strong>Settings → Pages</strong> öffnen und bei <strong>Source</strong> „GitHub Actions“ wählen.</li>
+      <li>Die Datei <code>.github/workflows/pages.yml</code> mit dem Inhalt von <a class="ref" href="#yaml">Seite <span data-page-of="yaml"></span></a> anlegen und hochladen (push).</li>
+      <li>Nach etwa einer Minute ist die App unter <span class="mono">https://&lt;benutzername&gt;.github.io/&lt;repository&gt;/</span> erreichbar. Jeder weitere Push veröffentlicht automatisch die neue Version.</li>
+    </ol>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md (Schritt 1) · Ergänzung: Netlify-Blog „Thirteen years of Netlify Drop“ (Löschung nicht beanspruchter Seiten)</p>
+  </div>
+  <footer class="foot"><span>Quellen: Lernkarten-App – docs/ANDROID.md · README.md · docs/ENTSCHEIDUNGEN.md</span><span class="pageno"></span></footer>
+</section>
+
+<!-- ================= Seite 3 ================= -->
+<section class="page" data-part="Teil 2 · App bereitstellen (Fortsetzung) · Teil 3 · Installieren">
+  <header class="run">
+    <div class="run-top"><span>Lernkarten-App · Anleitung</span><span>Holzbautechniker · HTS 2</span></div>
+    <div class="part"></div>
+  </header>
+  <div class="content">
+    <h3 id="yaml">Workflow-Datei für GitHub Pages</h3>
+    <figure>
+<pre class="code">name: Pages
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+      - id: deployment
+        uses: actions/deploy-pages@v4</pre>
+      <figcaption>Datei <span class="mono">.github/workflows/pages.yml</span> | Eigene Darstellung nach docs/ANDROID.md · Ergänzung: Action-Versionen nach GitHub (actions/deploy-pages v4, actions/upload-pages-artifact v5)</figcaption>
+    </figure>
+    <ul>
+      <li>Die App verwendet <strong>relative Pfade</strong> und läuft deshalb auch im Unterordner <span class="mono">/repository/</span> ohne Anpassung.</li>
+      <li><strong>Datenschutz:</strong> Auf dem Server liegt nur die App selbst. Decks, Lernstände und Backups bleiben auf dem Gerät; die Seite überträgt nichts zurück.</li>
+    </ul>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md (Schritt 1, Variante B) · docs/ENTSCHEIDUNGEN.md (Technik: relative Pfade)</p>
+
+    <h2 id="s3"><span class="no">3</span>Auf dem Handy installieren</h2>
+    <ol class="steps">
+      <li><strong>Chrome</strong> öffnen – nicht die Google-App und nicht den eingebauten Browser von WhatsApp oder E-Mail.</li>
+      <li>Die Adresse aus Abschnitt <a class="ref" href="#s2">2</a> eingeben.</li>
+      <li>Warten, bis unten kurz <strong>„Offline bereit“</strong> erscheint. Erst dann ist alles im Gerät gespeichert.</li>
+      <li>Oben rechts das Menü <strong>⋮</strong> öffnen → <strong>App installieren</strong> (auf manchen Geräten: <strong>Zum Startbildschirm hinzufügen</strong> → <strong>Installieren</strong>).</li>
+      <li>Bestätigen. Das Lernkarten-Symbol liegt jetzt auf dem Startbildschirm bzw. in der App-Übersicht.</li>
+    </ol>
+    <div class="box">
+      <span class="label">MERKE</span>
+      <p>Die App ab jetzt <strong>immer über das Symbol</strong> starten, nicht über einen Chrome-Tab.</p>
+    </div>
+    <p>Samsung Internet funktioniert ähnlich (Menü → <strong>Seite hinzufügen zu</strong> → <strong>Startbildschirm</strong>). Für „Bildschirm bleibt an“ und dauerhaften Speicher ist Chrome die sichere Wahl.</p>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md (Schritt 2)</p>
+  </div>
+  <footer class="foot"><span>Quellen: Lernkarten-App – docs/ANDROID.md · README.md · docs/ENTSCHEIDUNGEN.md</span><span class="pageno"></span></footer>
+</section>
+
+<!-- ================= Seite 4 ================= -->
+<section class="page" data-part="Teil 4 · Offline testen · Teil 5 · Decks aufs Handy bringen">
+  <header class="run">
+    <div class="run-top"><span>Lernkarten-App · Anleitung</span><span>Holzbautechniker · HTS 2</span></div>
+    <div class="part"></div>
+  </header>
+  <div class="content">
+    <h2 id="s4"><span class="no">4</span>Offline testen</h2>
+    <div class="box warn">
+      <span class="label">ACHTUNG / VOR DER ERSTEN ZUGFAHRT</span>
+      <p>Den Test einmal zu Hause durchführen. Fehlt beim ersten Laden die Zeit zum Speichern, merkt man es sonst erst im Funkloch.</p>
+    </div>
+    <ol class="steps">
+      <li>App über das Symbol öffnen und in der leeren Deckliste <strong>Beispieldeck laden</strong> antippen (später wieder löschbar).</li>
+      <li><strong>Flugmodus</strong> einschalten.</li>
+      <li>App komplett schließen (aus der Übersicht der offenen Apps wischen) und über das Symbol neu öffnen.</li>
+      <li>Das Deck muss da sein; <strong>Lernen</strong> und <strong>Quiz</strong> müssen funktionieren.</li>
+      <li>Flugmodus aus. Unter <strong>Einstellungen → Offline</strong> steht: „Die App ist auf diesem Gerät gespeichert und läuft ohne Internet.“</li>
+    </ol>
+    <p>Klappt etwas nicht: siehe Abschnitt <a class="ref" href="#s9">9</a>.</p>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md (Schritt 3)</p>
+
+    <h2 id="s5"><span class="no">5</span>Decks aufs Handy bringen</h2>
+    <p>Die App liest <strong>Deck-Dateien</strong> (<code>.json</code>), Anki-/Quizlet-Textdateien (<code>.txt</code>, <code>.tsv</code>, <code>.csv</code>) und Bilder direkt aus dem Handyspeicher.</p>
+    <table class="t">
+      <tr><th style="width:24%">Weg</th><th>So geht es</th></tr>
+      <tr><td>OneDrive</td><td class="plain">In der OneDrive-App die Deck-Datei antippen → <strong>⋮</strong> → <strong>Herunterladen</strong> (landet in <strong>Downloads</strong>). In der Lernkarten-App <strong>Deck importieren</strong> → Datei aus Downloads wählen.</td></tr>
+      <tr><td>Deck mit Bildern</td><td class="plain">Bei <code>"image": "bilder/…"</code> die Bilder ebenfalls herunterladen und im Dateidialog <strong>zusammen mit der JSON-Datei</strong> markieren.</td></tr>
+      <tr><td>Quizlet</td><td class="plain">Set exportieren, Text kopieren, in der Deckliste <strong>Text einfügen (Quizlet/Anki)</strong>.</td></tr>
+      <tr><td>Andere Wege</td><td class="plain">E-Mail an sich selbst, USB-Kabel oder „Teilen“ aus einer anderen App.</td></tr>
+    </table>
+    <div class="box">
+      <span class="label">MERKE</span>
+      <p>Nach der Installation einmal <strong>Einstellungen → Speicher → Dauerhaft speichern anfragen</strong> antippen. Dann löscht Android die Lerndaten nicht von sich aus, wenn der Speicher knapp wird.</p>
+    </div>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md (Schritt 4) · README.md (Import aus Anki oder Quizlet)</p>
+  </div>
+  <footer class="foot"><span>Quellen: Lernkarten-App – docs/ANDROID.md · README.md · docs/ENTSCHEIDUNGEN.md</span><span class="pageno"></span></footer>
+</section>
+
+<!-- ================= Seite 5 ================= -->
+<section class="page" data-part="Teil 6 · Lernen im Zug · Teil 7 · Laptop und Handy · Teil 8 · Updates">
+  <header class="run">
+    <div class="run-top"><span>Lernkarten-App · Anleitung</span><span>Holzbautechniker · HTS 2</span></div>
+    <div class="part"></div>
+  </header>
+  <div class="content">
+    <h2 id="s6"><span class="no">6</span>Lernen im Zug</h2>
+    <table class="t">
+      <tr><th style="width:24%">Funktion</th><th>Wirkung</th></tr>
+      <tr><td>Zugmodus</td><td class="plain">Zug-Symbol oben beim Lernen und im Quiz (oder in den Einstellungen): größere Schrift, Bewertung im <strong>2×2-Raster</strong> für den Daumen, <strong>Bildschirm bleibt an</strong>, solange gelernt wird.</td></tr>
+      <tr><td>Karte antippen</td><td class="plain">deckt die Antwort auf – mit einer Hand bedienbar.</td></tr>
+      <tr><td>Speichern</td><td class="plain">erfolgt sofort nach jeder Bewertung; die App darf jederzeit geschlossen werden.</td></tr>
+    </table>
+    <p>Im <strong>Energiesparmodus</strong> kann Android das Anlassen des Bildschirms verweigern; dann geht er wie gewohnt aus.</p>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md („Im Zug“) · docs/ENTSCHEIDUNGEN.md (Komfort, Phase 3)</p>
+
+    <h2 id="s7"><span class="no">7</span>Laptop und Handy</h2>
+    <p>Beide Geräte lernen <strong>getrennt</strong>: Jedes hat eigene Decks und Lernstände; es gibt keinen Server, der abgleicht.</p>
+    <figure>
+      <svg viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, sans-serif" role="img" aria-label="Datenaustausch zwischen Laptop und Handy">
+        <defs>
+          <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#2f6b52"/>
+          </marker>
+          <marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="#b0601f"/>
+          </marker>
+        </defs>
+        <g fill="#e9f0eb" stroke="#1f4d3a" stroke-width="1.4">
+          <rect x="2" y="12" width="170" height="126" rx="6"/>
+          <rect x="528" y="12" width="170" height="126" rx="6"/>
+        </g>
+        <g fill="#1f4d3a" font-size="15" font-weight="700" text-anchor="middle">
+          <text x="87" y="40">Laptop</text>
+          <text x="613" y="40">Handy</text>
+        </g>
+        <g fill="#1d1f1e" font-size="12.5" text-anchor="middle">
+          <text x="87" y="70">Decks</text>
+          <text x="87" y="90">Lernstände</text>
+          <text x="87" y="110">Einstellungen</text>
+          <text x="613" y="70">Decks</text>
+          <text x="613" y="90">Lernstände</text>
+          <text x="613" y="110">Einstellungen</text>
+        </g>
+        <line x1="178" y1="58" x2="522" y2="58" stroke="#2f6b52" stroke-width="1.6" marker-start="url(#ar2)" marker-end="url(#ar2)"/>
+        <text x="350" y="48" fill="#1f4d3a" font-size="12.5" font-weight="700" text-anchor="middle">Deck-Datei (.json)</text>
+        <text x="350" y="76" fill="#5f6762" font-size="11.5" text-anchor="middle">nur Karten – Lernstand bleibt je Gerät</text>
+        <line x1="178" y1="112" x2="522" y2="112" stroke="#b0601f" stroke-width="1.6" marker-end="url(#ar3)"/>
+        <text x="350" y="102" fill="#b0601f" font-size="12.5" font-weight="700" text-anchor="middle">Backup</text>
+        <text x="350" y="130" fill="#5f6762" font-size="11.5" text-anchor="middle">alles – ersetzt den Stand auf dem Zielgerät</text>
+      </svg>
+      <figcaption>Was zwischen Laptop und Handy übertragen wird (schematisch) | Eigene Darstellung nach docs/ANDROID.md und docs/ENTSCHEIDUNGEN.md</figcaption>
+    </figure>
+    <table class="t">
+      <tr><th style="width:30%">Ziel</th><th>Weg</th></tr>
+      <tr><td>Gleiche Decks auf beiden</td><td class="plain">Die Deck-Datei auf beiden Geräten importieren.</td></tr>
+      <tr><td>Lernstand umziehen</td><td class="plain">Laptop: <strong>Einstellungen → Sicherung → Backup herunterladen</strong>; Datei aufs Handy bringen; dort <strong>Backup wiederherstellen</strong>.</td></tr>
+      <tr><td>Backup vom Handy sichern</td><td class="plain"><strong>Backup teilen …</strong> legt es z. B. direkt in OneDrive ab.</td></tr>
+    </table>
+    <div class="box warn">
+      <span class="label">ACHTUNG</span>
+      <p><strong>Backup wiederherstellen ersetzt alles</strong> auf dem Zielgerät. Zwei Geräte werden nicht zusammengeführt.</p>
+    </div>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md („Laptop und Handy“) · docs/ENTSCHEIDUNGEN.md (Backup) · Skizze: eigene Darstellung</p>
+
+    <h2 id="s8"><span class="no">8</span>Updates</h2>
+    <p>Nach einer neuen Version (Abschnitt <a class="ref" href="#s2">2</a> erneut) holt sich die App die Änderungen beim nächsten Start <strong>mit Internet</strong> selbst. Manchmal ist sie erst nach dem <strong>zweiten Öffnen</strong> aktuell. Decks und Lernstände bleiben bei Updates erhalten.</p>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md („Updates“)</p>
+  </div>
+  <footer class="foot"><span>Quellen: Lernkarten-App – docs/ANDROID.md · README.md · docs/ENTSCHEIDUNGEN.md</span><span class="pageno"></span></footer>
+</section>
+
+<!-- ================= Seite 6 ================= -->
+<section class="page" data-part="Teil 9 · Probleme · Teil 10 · iPhone und APK · Teil 11–12 · Zusammenfassung und Quellen">
+  <header class="run">
+    <div class="run-top"><span>Lernkarten-App · Anleitung</span><span>Holzbautechniker · HTS 2</span></div>
+    <div class="part"></div>
+  </header>
+  <div class="content">
+    <h2 id="s9"><span class="no">9</span>Probleme und Lösungen</h2>
+    <table class="t">
+      <tr><th style="width:32%">Problem</th><th>Lösung</th></tr>
+      <tr><td>„App installieren“ fehlt im Menü</td><td class="plain">Über <strong>https</strong> geöffnet? Normale Chrome-App statt Browser in WhatsApp oder Google-App? Seite neu laden.</td></tr>
+      <tr><td>Offline nur „Keine Internetverbindung“</td><td class="plain">Beim ersten Öffnen nicht lange genug online: mit Internet öffnen, „Offline bereit“ abwarten, erneut testen.</td></tr>
+      <tr><td>Decks sind plötzlich weg</td><td class="plain">Nach Deinstallation oder Löschen der <strong>Website-Daten von Chrome</strong>. Deshalb regelmäßig ein Backup – die Deckliste erinnert nach <strong>14 Tagen</strong>.</td></tr>
+      <tr><td>Bildschirm geht trotz Zugmodus aus</td><td class="plain">Energiesparmodus aus oder die Bildschirm-Zeit von Android hochsetzen.</td></tr>
+      <tr><td>Datei lässt sich nicht auswählen</td><td class="plain">Über <strong>☰ → Downloads</strong> oder <strong>OneDrive</strong> suchen; manche Dateimanager zeigen <code>.json</code> erst bei „Alle Dateien“.</td></tr>
+    </table>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md („Probleme“)</p>
+
+    <h2 id="s10"><span class="no">10</span>iPhone und APK</h2>
+    <ul>
+      <li><strong>iPhone:</strong> Safari → <strong>Teilen</strong> → <strong>Zum Home-Bildschirm</strong>; offline genauso. iOS kann Web-App-Daten nach mehreren Wochen ohne Nutzung löschen – Backup!</li>
+      <li><strong>APK:</strong> kein Vorteil fürs Lernen im Zug. Über <strong>Capacitor</strong> wären Android Studio und das SDK nötig; bewusst nicht gebaut, nachrüstbar.</li>
+    </ul>
+    <p class="src">Quelle: Lernkarten-App, docs/ANDROID.md („iPhone“, „Und eine echte APK?“) · docs/ENTSCHEIDUNGEN.md (Android, Phase 5)</p>
+
+    <h2 id="s11"><span class="no">11</span>Das Wichtigste in Kürze</h2>
+    <div class="box">
+      <span class="label">MERKE</span>
+      <ul>
+        <li><strong>Web-App aus Chrome</strong> statt Play Store oder APK.</li>
+        <li>Nötig ist eine <strong>https-Adresse</strong> (Netlify oder GitHub Pages).</li>
+        <li><strong>„Offline bereit“</strong> abwarten, dann ⋮ → <strong>App installieren</strong>.</li>
+        <li>Vor der ersten Fahrt im <strong>Flugmodus</strong> testen.</li>
+        <li>Decks aus OneDrive laden, <strong>dauerhaften Speicher</strong> anfragen.</li>
+        <li>Geräte lernen getrennt; <strong>Wiederherstellen ersetzt alles</strong>.</li>
+      </ul>
+    </div>
+
+    <h2 id="s12"><span class="no">12</span>Quellenverzeichnis</h2>
+    <ul class="lit">
+      <li>Hartmann, Maik: <em>Lernkarten-App</em>, Projektdokumentation docs/ANDROID.md, README.md und docs/ENTSCHEIDUNGEN.md, Stand 16.10.2026.</li>
+      <li>Netlify: <em>Thirteen years of Netlify Drop</em>, Blogbeitrag, netlify.com/blog, abgerufen am 16.10.2026 (Ergänzung zu nicht beanspruchten Drop-Seiten).</li>
+      <li>GitHub: <em>actions/deploy-pages</em> (v4) und <em>actions/upload-pages-artifact</em> (v5), github.com/actions, abgerufen am 16.10.2026 (Ergänzung zu den Action-Versionen).</li>
+    </ul>
+    <p class="src">Vorlage: Hefteintrag_Allgemein.md, Version 2.1</p>
+  </div>
+  <footer class="foot"><span>Quellen: Lernkarten-App – docs/ANDROID.md · README.md · docs/ENTSCHEIDUNGEN.md</span><span class="pageno"></span></footer>
+</section>
+
+<script>
+  // Teil-Kennzeichnung, Seitenzahlen und Seitenverweise im Inhaltsverzeichnis setzen.
+  const pages = [...document.querySelectorAll('.page')];
+  pages.forEach((page, i) => {
+    page.querySelector('.part').textContent = page.dataset.part;
+    page.querySelector('.pageno').textContent = `Seite ${i + 1} von ${pages.length}`;
+  });
+  document.querySelectorAll('[data-page-of]').forEach((cell) => {
+    const target = document.getElementById(cell.dataset.pageOf);
+    cell.textContent = target ? String(pages.indexOf(target.closest('.page')) + 1) : '?';
+  });
+</script>
+</body>
+</html>
