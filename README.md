@@ -2,6 +2,8 @@
 
 Offline-Lernkarten mit Spaced Repetition (SM-2) als installierbare Web-App. Decks kommen als JSON-Datei ins Gerät, gelernt wird ohne Internet, ohne Konto und ohne Server – auf dem Windows-Laptop und dem Android-Handy.
 
+**App online:** https://0maikhartmann0-droid.github.io/lernkarten-app/ – einmal öffnen, „Offline bereit“ abwarten, installieren (siehe [docs/ANDROID.md](docs/ANDROID.md)). Jeder Push auf `main` prüft und veröffentlicht automatisch.
+
 **Stand: alle Phasen umgesetzt.** Deck-Import, Deckliste, Karteikarten-Lernmodus, Statistik, Offline-Betrieb, Quiz-Modi, Suche und Tag-Filter, Karten bearbeiten, Bilder, Zugmodus, Backup und Wiederherstellen, Export (Deck-JSON, Anki-TSV, Druckansicht/PDF) sowie Import aus Anki und Quizlet. Für Android gibt es eine Installationsanleitung ([docs/ANDROID.md](docs/ANDROID.md)); eine APK ist bewusst nicht gebaut.
 
 ## Start
